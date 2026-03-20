@@ -1,0 +1,171 @@
+<div class="min-h-screen bg-cafe-cream font-sans text-cafe-dark selection:bg-cafe-gold/20">
+  
+  <app-header
+    [language]="language()"
+    [selectionCount]="selectionCount()"
+    [isSharing]="isSharing()"
+    (toggleLanguage)="toggleLanguage()"
+    (shareMenu)="shareMenu()"
+    (scrollToSelection)="scrollToSelection()"
+    (scrollToFooter)="scrollToFooter()"
+  ></app-header>
+
+  <app-hero
+    [language]="language()"
+    (scrollToMenu)="scrollToMenu()"
+    (scrollToFooter)="scrollToFooter()"
+  ></app-hero>
+
+  <app-category-filter
+    [categories]="categories()"
+    [selectedCategory]="selectedCategory()"
+    [searchQuery]="searchQuery()"
+    [language]="language()"
+    (selectCategory)="selectCategory($event)"
+    (searchQueryChange)="menuService.setSearchQuery($event)"
+  ></app-category-filter>
+
+  <!-- Menu Grid: Bento Style -->
+  <main class="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-32">
+    <div #menuGrid class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-12">
+      @for (item of filteredItems(); track item.id) {
+        <app-menu-card
+          [item]="item"
+          [language]="language()"
+          (rate)="rateItem(item, $event)"
+          (add)="addToSelection(item)"
+          (click)="openDetail(item)"
+        ></app-menu-card>
+      } @empty {
+        <div class="col-span-full py-32 text-center">
+          <div class="w-24 h-24 bg-cafe-dark/5 rounded-full flex items-center justify-center mx-auto mb-8">
+            <mat-icon class="text-cafe-dark/20 text-5xl">search_off</mat-icon>
+          </div>
+          <h3 class="text-3xl font-serif italic tracking-tighter mb-4">
+            {{ language() === 'en' ? 'No matches found' : 'ምንም አልተገኘም' }}
+          </h3>
+          <p class="text-cafe-dark/40 max-w-xs mx-auto font-light">
+            {{ language() === 'en' ? 'Try adjusting your search or category to find what you\'re looking for.' : 'እባክዎ ፍለጋዎን ያስተካክሉ' }}
+          </p>
+        </div>
+      }
+    </div>
+  </main>
+
+  <!-- My Selection Section: Premium Summary -->
+  @if (selectionCount() > 0) {
+    <section #selectionSection class="bg-cafe-dark text-white py-20 md:py-32">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row items-center justify-between p-8 md:p-16 bg-white rounded-[3rem] text-cafe-dark shadow-2xl">
+          <div class="mb-8 md:mb-0 text-center md:text-left">
+            <h2 class="text-3xl md:text-5xl font-serif italic tracking-tighter leading-none mb-4">
+              {{ language() === 'en' ? 'Your' : 'የእርስዎ' }} <span class="text-cafe-gold">{{ language() === 'en' ? 'Selection' : 'ምርጫ' }}</span>
+            </h2>
+            <p class="text-[10px] font-black uppercase tracking-[0.4em] text-cafe-gold mb-2">
+              {{ language() === 'en' ? 'Subtotal Amount' : 'ጠቅላላ ድምር' }}
+            </p>
+            <p class="text-3xl md:text-5xl font-serif italic tracking-tighter">
+              \${{ totalPrice().toFixed(2) }}
+            </p>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+            <button (click)="clearSelection()" class="px-10 py-6 border border-cafe-dark/10 text-cafe-dark/40 text-[10px] font-black uppercase tracking-[0.4em] rounded-full hover:text-red-500 hover:border-red-500/20 transition-all">
+              {{ language() === 'en' ? 'Reset' : 'አጥፋ' }}
+            </button>
+            <button (click)="toggleReview()" class="px-16 py-6 bg-cafe-dark text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-full hover:bg-cafe-gold hover:text-cafe-dark transition-all shadow-xl shadow-cafe-dark/20">
+              {{ language() === 'en' ? 'Review & Order' : 'ገምግም እና እዘዝ' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Newsletter / CTA: Immersive Full Width -->
+  <section class="bg-cafe-dark py-20 md:py-32 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
+        <div>
+          <h2 class="text-4xl md:text-8xl font-serif italic tracking-tighter text-white leading-none mb-8">
+            {{ language() === 'en' ? 'Join the' : 'ይቀላቀሉ' }} <br>
+            <span class="text-cafe-gold">{{ language() === 'en' ? 'Circle' : 'ክበብ' }}</span>
+          </h2>
+          <p class="text-white/40 text-lg font-light max-w-md">
+            {{ language() === 'en' ? 'Get exclusive access to private tastings, secret menu drops, and artisanal brewing workshops.' : 'የግል የቅምሻ ዝግጅቶችን እና ልዩ የቡና አሰራር ስልጠናዎችን ያግኙ።' }}
+          </p>
+        </div>
+        <div class="bg-white/5 backdrop-blur-3xl p-12 rounded-[4rem] border border-white/10">
+          <div class="flex flex-col gap-6">
+            <input 
+              type="email" 
+              [placeholder]="language() === 'en' ? 'Your elite email' : 'የእርስዎ ኢሜል'" 
+              class="w-full px-8 py-6 bg-white/5 border border-white/10 rounded-full text-white placeholder:text-white/20 focus:outline-none focus:border-cafe-gold transition-all"
+            >
+            <button class="w-full py-6 bg-cafe-gold text-cafe-dark rounded-full font-black uppercase tracking-[0.4em] text-[10px] hover:bg-white transition-all">
+              {{ language() === 'en' ? 'Request Access' : 'መግቢያ ይጠይቁ' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Decorative background elements -->
+    <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-cafe-gold/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-[120px]"></div>
+    <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cafe-gold/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-[120px]"></div>
+  </section>
+
+  <app-footer #footer [language]="language()"></app-footer>
+
+  <!-- Floating Action Button -->
+  <button 
+    (click)="contactUs()"
+    class="fixed bottom-10 right-10 z-50 w-16 h-16 bg-cafe-dark text-white rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.3)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all group"
+  >
+    <mat-icon class="group-hover:rotate-12 transition-transform">phone</mat-icon>
+  </button>
+
+  @if (showReview()) {
+    <app-review-modal
+      [items]="selectedItems()"
+      [totalPrice]="totalPrice()"
+      [language]="language()"
+      (closeModal)="toggleReview()"
+      (confirm)="confirmOrder()"
+    ></app-review-modal>
+  }
+
+  @if (selectedItemForDetail(); as item) {
+    <app-item-detail-modal
+      [item]="item"
+      [language]="language()"
+      (closeModal)="closeDetail()"
+      (add)="addToSelection(item)"
+    ></app-item-detail-modal>
+  }
+</div>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1.1); }
+    50% { transform: scale(1.15); }
+  }
+  .animate-fade-in { animation: fade-in 1.2s ease-out forwards; }
+  .animate-fade-in-delayed { animation: fade-in 1.2s ease-out 0.6s forwards; opacity: 0; }
+  .animate-slide-up { animation: slide-up 1s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+  .animate-pulse-slow { animation: pulse-slow 20s infinite ease-in-out; }
+</style>

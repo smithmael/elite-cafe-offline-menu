@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-display: "Playfair Display", serif;
+  
+  --color-cafe-dark: #1A1A1A;
+  --color-cafe-gold: #D4AF37;
+  --color-cafe-cream: #FDFCF8;
+  --color-cafe-accent: #5A5A40;
+}
+
+@layer base {
+  body {
+    @apply bg-cafe-cream text-cafe-dark font-sans antialiased selection:bg-cafe-gold/20 overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .glass-header {
+    @apply sticky top-0 z-50 bg-cafe-cream/80 backdrop-blur-xl border-b border-cafe-dark/5 transition-all duration-500;
+  }
+  
+  .category-pill {
+    @apply px-6 py-2 rounded-full border border-cafe-dark/10 text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap;
+  }
+  
+  .menu-card {
+    @apply bg-white rounded-[2.5rem] overflow-hidden border border-cafe-dark/5 shadow-sm hover:shadow-2xl transition-all duration-700;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cafe-dark/10 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-cafe-gold/50;
+  }
+}

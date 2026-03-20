@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  --color-cafe-gold: #C5A059;
+  --color-cafe-dark: #1A1A1A;
+  --color-cafe-cream: #F9F7F2;
+}
+
+@layer base {
+  body {
+    @apply antialiased bg-cafe-cream text-cafe-dark;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .glass-header {
+    @apply md:sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-cafe-dark/5;
+  }
+  
+  .menu-card {
+    @apply bg-white rounded-[2rem] overflow-hidden border border-cafe-dark/5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] transition-all duration-500;
+  }
+  
+  .menu-card:hover {
+    @apply -translate-y-2 shadow-[0_30px_60px_rgba(0,0,0,0.12)];
+  }
+  
+  .category-pill {
+    @apply px-6 py-2.5 rounded-full text-xs font-semibold tracking-widest uppercase transition-all duration-300 whitespace-nowrap border;
+  }
+
+  /* Mobile-specific card adjustments */
+  @media (max-width: 640px) {
+    .menu-card {
+      @apply rounded-[1.5rem];
+    }
+    .menu-card p {
+      @apply text-xs;
+    }
+  }
+}
+
+/* Custom scrollbar for category filter */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth reveal animation classes - removed default hidden state to ensure visibility if JS fails */
+.reveal-item {
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
