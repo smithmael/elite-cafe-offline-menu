@@ -96,12 +96,25 @@ export class Home {
 
   rateItem(item: MenuItem, rating: number) {
     this.menuService.updateRating(item.id, rating);
-    this.snackBar.open(`You rated ${item.name[this.language()]} ${rating} stars!`, 'Close', { duration: 2000 });
+    // The MenuCard already shows a "Thank you" message, but we can also show a snackbar for global feedback
+    this.snackBar.open(
+      this.language() === 'en' 
+        ? `You rated ${item.name.en} ${rating} stars!` 
+        : `${item.name.am}ን ${rating} ኮከብ ሰጥተዋል!`, 
+      'Close', 
+      { duration: 2000 }
+    );
   }
 
   addToSelection(item: MenuItem) {
     this.selectionService.addItem(item);
-    this.snackBar.open(`${item.name[this.language()]} added to selection!`, 'Close', { duration: 2000 });
+    this.snackBar.open(
+      this.language() === 'en'
+        ? `${item.name.en} is ready to eat!`
+        : `${item.name.am} ለመመገብ ዝግጁ ነው!`,
+      'Close',
+      { duration: 2000 }
+    );
   }
 
   selectCategory(category: string) {
@@ -125,6 +138,7 @@ export class Home {
     const section = this.selectionSection();
     if (section) {
       section.nativeElement?.scrollIntoView({ behavior: 'smooth' });
+    } else {
       this.scrollToFooter();
     }
   }

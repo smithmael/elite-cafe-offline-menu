@@ -14,8 +14,7 @@ import {Logo} from './logo';
       <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         <app-logo></app-logo>
 
-         
-
+        <div class="flex items-center gap-8">
           <div class="flex items-center gap-2">
           <!-- Language Switcher -->
           <button 
@@ -49,7 +48,7 @@ import {Logo} from './logo';
           </div>
         </div>
       </div>
-  
+    </div>
   </nav>
   `
 })

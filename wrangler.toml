@@ -1,0 +1,6 @@
+name = "elite-cafe"
+pages_build_output_dir = "dist/app/browser"
+
+[vars]
+# Add any environment variables here if needed
+# GEMINI_API_KEY = "..."

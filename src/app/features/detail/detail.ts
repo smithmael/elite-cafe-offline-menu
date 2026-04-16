@@ -14,6 +14,9 @@ import {MenuItem} from '../../core/models/menu-item.model';
 import {Header} from '../../layout/header';
 import {Footer} from '../../layout/footer';
 
+// Shared Components
+// import {QuantitySelector} from '../../shared/components/quantity-selector';
+
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-detail',
@@ -54,9 +57,18 @@ import {Footer} from '../../layout/footer';
               <div class="absolute inset-0 bg-gradient-to-t from-cafe-dark/40 via-transparent to-transparent"></div>
               
               <!-- Floating Price Badge -->
-              <div class="absolute bottom-12 right-12 w-32 h-32 bg-cafe-gold rounded-full flex items-center justify-center shadow-2xl animate-pulse-slow">
-                <span class="text-white font-black text-2xl tracking-tighter">\${{ item.price.toFixed(2) }}</span>
+              <div class="absolute bottom-12 left-12 w-32 h-32 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl animate-pulse-slow">
+                <span class="text-cafe-gold font-black text-2xl tracking-tighter">\${{ item.price.toFixed(2) }}</span>
               </div>
+
+              <!-- Floating Add Button -->
+              <button 
+                (click)="addToSelection(item)"
+                class="absolute bottom-12 right-12 w-24 h-24 rounded-full bg-cafe-gold text-cafe-dark flex flex-col items-center justify-center shadow-2xl hover:bg-white transition-all duration-500 group/add active:scale-90 z-20"
+              >
+                <mat-icon class="group-hover/add:rotate-12 transition-transform scale-125">add</mat-icon>
+                <span class="text-[9px] font-black uppercase tracking-[0.3em] mt-2">{{ language() === 'en' ? 'Eat' : 'ይመገቡ' }}</span>
+              </button>
 
               <!-- Vertical Rail Text -->
               <div class="absolute left-10 top-1/2 -translate-y-1/2 hidden xl:block">
@@ -101,18 +113,7 @@ import {Footer} from '../../layout/footer';
                   }
                 </div>
 
-                <div class="hidden lg:flex flex-col sm:flex-row items-center gap-6">
-                  <button 
-                    (click)="addToSelection(item)"
-                    class="w-full sm:flex-grow py-8 bg-cafe-dark text-white rounded-full font-black uppercase tracking-[0.5em] text-[10px] hover:bg-cafe-gold hover:text-cafe-dark transition-all shadow-2xl shadow-cafe-dark/20 flex items-center justify-center gap-4 group"
-                  >
-                    <mat-icon class="group-hover:scale-125 transition-transform">add_circle</mat-icon>
-                    {{ language() === 'en' ? 'Add to Selection' : 'ወደ ምርጫዬ ጨምር' }}
-                  </button>
-                  <button class="w-24 h-24 rounded-full border border-cafe-dark/10 flex items-center justify-center hover:border-cafe-gold hover:text-cafe-gold transition-all group">
-                    <mat-icon class="group-hover:scale-110 transition-transform">favorite_border</mat-icon>
-                  </button>
-                </div>
+                <div class="hidden lg:block h-20"></div>
               </div>
             </div>
           </div>
@@ -158,13 +159,19 @@ import {Footer} from '../../layout/footer';
       <!-- Mobile Sticky Action Bar -->
       <div class="lg:hidden sticky bottom-0 left-0 right-0 p-4 bg-cafe-cream/80 backdrop-blur-xl border-t border-cafe-dark/5 z-50">
         @if (item(); as item) {
-          <button 
-            (click)="addToSelection(item)"
-            class="w-full py-6 bg-cafe-dark text-white rounded-full font-black uppercase tracking-[0.5em] text-[10px] hover:bg-cafe-gold hover:text-cafe-dark transition-all shadow-2xl shadow-cafe-dark/20 flex items-center justify-center gap-4 group"
-          >
-            <mat-icon class="group-hover:scale-125 transition-transform">add_circle</mat-icon>
-            {{ language() === 'en' ? 'Add to Selection' : 'ወደ ምርጫዬ ጨምር' }}
-          </button>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[8px] font-black uppercase tracking-widest text-cafe-gold mb-1">Price</p>
+              <p class="text-2xl font-serif italic text-cafe-dark">\${{ item.price.toFixed(2) }}</p>
+            </div>
+            <button 
+              (click)="addToSelection(item)"
+              class="px-10 py-5 bg-cafe-dark text-white rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-cafe-gold hover:text-cafe-dark transition-all active:scale-95 flex items-center gap-3"
+            >
+              <mat-icon class="scale-75">add</mat-icon>
+              {{ language() === 'en' ? 'Eat' : 'ይመገቡ' }}
+            </button>
+          </div>
         }
       </div>
     </div>
@@ -194,7 +201,13 @@ export class Detail {
 
   addToSelection(item: MenuItem) {
     this.selectionService.addItem(item);
-    this.snackBar.open(`${item.name[this.language()]} added to selection!`, 'Close', { duration: 2000 });
+    this.snackBar.open(
+      this.language() === 'en'
+        ? `${item.name.en} is ready to eat!`
+        : `${item.name.am} ለመመገብ ዝግጁ ነው!`,
+      'Close',
+      { duration: 2000 }
+    );
   }
 
   toggleLanguage() {

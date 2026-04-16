@@ -6,7 +6,7 @@
     "schematicCollections": [
       "angular-eslint"
     ],
-    "analytics": "51bc0ddb-4991-4706-99e3-e1228c60950f"
+    "analytics": "dd617d27-8bf8-4c5a-b0b9-f235f3d91357"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -21,7 +21,8 @@
           "builder": "@angular/build:application",
           "options": {
             "define": {
-              "GEMINI_API_KEY": "'YOUR_GEMINI_API_KEY'"
+             "GEMINI_API_KEY": "'AIzaSyDIUhOd-k1OD5l_YwdCO8-qkoGKFccn0b8'",
+             "APP_URL": "'http://192.168.100.189:3000'"
             },
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",

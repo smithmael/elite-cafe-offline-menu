@@ -5,35 +5,19 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import {join} from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const browserDistFolder = join(import.meta.dirname, '../browser');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const browserDistFolder = join(__dirname, '../browser');
 
 const app = express();
-const angularApp = new AngularNodeAppEngine({
-  allowedHosts: ['localhost', '127.0.0.1', '0.0.0.0', '192.168.1.7']
-});
-app.get('/api/config', (req, res) => {
-  res.json({
-    geminiKey: process.env['GEMINI_API_KEY'],
-    appUrl: process.env['APP_URL']
-  });
-});
+const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
- */
-
-/**
- * Serve static files from /browser
+ * Static File Serving
+ * Serve assets from the /browser folder with caching
  */
 app.use(
   express.static(browserDistFolder, {
@@ -44,33 +28,35 @@ app.use(
 );
 
 /**
- * Handle all other requests by rendering the Angular application.
+ * Angular SSR Rendering
+ * Handle all requests by rendering the Angular application.
  */
-app.use((req, res, next) => {
+app.all('{*path}', (req, res, next) => {
   angularApp
     .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
+    .then((response) => {
+      if (response) {
+        return writeResponseToNodeResponse(response, res);
+      }
+      return next();
+    })
     .catch(next);
 });
 
 /**
- * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
+ * Server Lifecycle
  */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
+  // Use 127.0.0.1 instead of localhost to avoid "Hostname not allowed" errors
+  const port = process.env['PORT'] || 3000;
+  const host = process.env['HOST'] || '127.0.0.1'; 
 
-    console.log(`Node Express server listening on http://localhost:${port}`);
+  app.listen(Number(port), host, () => {
+    console.log(`🚀 Server active at: http://${host}:${port}`);
   });
 }
 
 /**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
+ * Export for Angular CLI / Cloud Functions
  */
 export const reqHandler = createNodeRequestHandler(app);

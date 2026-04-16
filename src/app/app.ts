@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {RouterModule} from '@angular/router';
+import {UpdateService} from './core/services/update.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,4 +9,6 @@ import {RouterModule} from '@angular/router';
   imports: [RouterModule],
   template: `<router-outlet></router-outlet>`,
 })
-export class App {}
+export class App {
+  private updateService = inject(UpdateService);
+}

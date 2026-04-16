@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
-import {MenuItem} from '../../../core/models/menu-item.model';
+import {SelectionItem} from '../../../core/services/selection.service';
 
 @Component({
   selector: 'app-review-modal',
@@ -40,15 +40,17 @@ import {MenuItem} from '../../../core/models/menu-item.model';
               @for (item of items(); track item.id) {
                 <div class="flex items-center justify-between py-4 border-b border-cafe-dark/5 group">
                   <div class="flex items-center gap-6">
-                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white border border-cafe-dark/5 shadow-sm">
+                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white border border-cafe-dark/5 shadow-sm relative">
                       <img [src]="item.image" [alt]="item.name[language()]" class="w-full h-full object-cover" referrerpolicy="no-referrer">
                     </div>
                     <div>
                       <h4 class="font-serif italic text-xl text-cafe-dark">{{ item.name[language()] }}</h4>
-                      <p class="text-[9px] text-cafe-gold font-black uppercase tracking-[0.4em] mt-1">{{ item.category[language()] }}</p>
+                      <div class="flex items-center gap-2 mt-1">
+                        <p class="text-[9px] text-cafe-gold font-black uppercase tracking-[0.4em]">{{ item.category[language()] }}</p>
+                      </div>
                     </div>
                   </div>
-                  <span class="font-black text-cafe-dark tracking-tighter">\${{ item.price.toFixed(2) }}</span>
+                  <span class="font-black text-cafe-dark tracking-tighter">\${{ (item.price * item.quantity).toFixed(2) }}</span>
                 </div>
               }
             </div>
@@ -75,7 +77,7 @@ import {MenuItem} from '../../../core/models/menu-item.model';
   `
 })
 export class ReviewModal {
-  items = input.required<MenuItem[]>();
+  items = input.required<SelectionItem[]>();
   totalPrice = input.required<number>();
   language = input.required<'en' | 'am'>();
   closeModal = output();

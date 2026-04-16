@@ -29,21 +29,19 @@ import {MatIconModule} from '@angular/material/icon';
             {{ language() === 'en' ? 'Experience the rare fusion of Ethiopian heritage and modern artisanal roasting techniques.' : 'የኢትዮጵያን ቅርስ እና ዘመናዊ የቡና አቆላል ጥበብን በአንድ ላይ ይለማመዱ።' }}
           </p>
           
-        <div class="flex flex-col sm:flex-row gap-6 animate-fade-in-delayed">
-          <button 
-              (click)="scrollToMenu.emit()"
-               class="px-12 py-6 bg-cafe-gold text-cafe-dark rounded-full font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white transition-all shadow-2xl shadow-cafe-gold/10"
-                              >
-               {{ language() === 'en' ? 'Discover Menu' : 'ሜኑውን ይመርምሩ' }}
-         </button>
-
+          <div class="flex flex-col sm:flex-row gap-6 animate-fade-in-delayed">
             <button 
-                (click)="scrollToFooter.emit()"
-            type="button"
-             class="px-12 py-6 border border-white/10 text-white rounded-full font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white/10 transition-all cursor-pointer"
-                     >
-                        {{ language() === 'en' ? 'Our Heritage' : 'ስለ ቅርሳችን' }}
-                         </button>
+              (click)="scrollToMenu.emit()"
+              class="px-12 py-6 bg-cafe-gold text-cafe-dark rounded-full font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white transition-all shadow-2xl shadow-cafe-gold/10"
+            >
+              {{ language() === 'en' ? 'Discover Menu' : 'ሜኑውን ይመርምሩ' }}
+            </button>
+            <button 
+              (click)="scrollToFooter.emit()"
+              class="px-12 py-6 border border-white/10 text-white rounded-full font-black text-[10px] uppercase tracking-[0.3em] hover:bg-white hover:text-cafe-dark transition-all cursor-pointer"
+            >
+              {{ language() === 'en' ? 'Our Heritage' : 'ስለ ቅርሳችን' }}
+            </button>
           </div>
         </div>
 
