@@ -1,0 +1,16 @@
+studio/sanity.cli.ts
+  h_e9499b26fd533c 3,10
+angular.json
+  h_e9499b26fd533c 50-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "873f83e65509be31c0736f99769980b34ba1325a",
+  "prompts": {},
+  "humans": {
+    "h_e9499b26fd533c": {
+      "author": "smithmael"
+    }
+  }
+}
