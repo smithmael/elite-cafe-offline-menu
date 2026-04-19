@@ -1,0 +1,22 @@
+studio/schemaTypes/index.ts
+  h_e9499b26fd533c 1-4
+src/app/core/services/menu.service.ts
+  h_e9499b26fd533c 2-3,9-23,33-50,54-66,68,84,98,102,107,114
+studio/schemaTypes/menuItem.ts
+  h_e9499b26fd533c 1-47
+studio/sanity.config.ts
+  h_e9499b26fd533c 1-18
+studio/sanity.cli.ts
+  h_e9499b26fd533c 1-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "9c9d08e8920b068bb2d49a23083d1ffbd5e1d422",
+  "prompts": {},
+  "humans": {
+    "h_e9499b26fd533c": {
+      "author": "smithmael"
+    }
+  }
+}
