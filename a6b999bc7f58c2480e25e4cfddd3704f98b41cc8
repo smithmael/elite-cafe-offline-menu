@@ -1,0 +1,26 @@
+src/app/features/home/components/menu-card.ts
+  h_e9499b26fd533c 39
+src/app/core/models/menu-item.model.ts
+  h_e9499b26fd533c 3-4,6,10
+src/app/features/home/components/item-detail-modal.ts
+  h_e9499b26fd533c 69
+src/app/features/home/components/review-modal.ts
+  h_e9499b26fd533c 49
+src/app/core/services/menu.service.ts
+  h_e9499b26fd533c 17,22-27,34-64,66,68,73,78-81,84,89
+src/app/features/detail/detail.ts
+  h_e9499b26fd533c 92
+src/app/features/home/components/category-filter.ts
+  h_e9499b26fd533c 13,29,34,37,55-56
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.0",
+  "base_commit_sha": "a6b999bc7f58c2480e25e4cfddd3704f98b41cc8",
+  "prompts": {},
+  "humans": {
+    "h_e9499b26fd533c": {
+      "author": "smithmael"
+    }
+  }
+}
