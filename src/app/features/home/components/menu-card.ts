@@ -36,7 +36,7 @@ import {MenuItem} from '../../../core/models/menu-item.model';
       <div class="p-6 md:p-10 flex-1 flex flex-col">
         <div class="flex items-center justify-between mb-4">
           <span class="text-[9px] font-black uppercase tracking-[0.4em] text-cafe-gold">
-            {{ language() === 'en' ? item().category.en : item().category.am }}
+           {{ item().category }}
           </span>
           <div class="flex items-center gap-1 px-2 py-1 bg-cafe-dark/5 rounded-full">
             <mat-icon class="text-cafe-gold text-[10px] scale-75">star</mat-icon>

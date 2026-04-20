@@ -89,7 +89,7 @@ import {Footer} from '../../layout/footer';
               <div class="max-w-xl mx-auto lg:mx-0">
                 <div class="flex items-center gap-4 mb-8">
                   <span class="px-4 py-1.5 rounded-full bg-cafe-gold/10 text-cafe-gold text-[9px] font-black uppercase tracking-[0.3em] border border-cafe-gold/5">
-                    {{ item.category[language()] }}
+                    {{ item.category }}
                   </span>
                   <div class="flex items-center gap-1.5 px-3 py-1.5 bg-white rounded-full border border-cafe-dark/5 shadow-sm">
                     <mat-icon class="text-cafe-gold text-xs">star</mat-icon>

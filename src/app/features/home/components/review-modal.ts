@@ -46,7 +46,7 @@ import {SelectionItem} from '../../../core/services/selection.service';
                     <div>
                       <h4 class="font-serif italic text-xl text-cafe-dark">{{ item.name[language()] }}</h4>
                       <div class="flex items-center gap-2 mt-1">
-                        <p class="text-[9px] text-cafe-gold font-black uppercase tracking-[0.4em]">{{ item.category[language()] }}</p>
+                        <p class="text-[9px] text-cafe-gold font-black uppercase tracking-[0.4em]">{{ item.category }}</p>
                       </div>
                     </div>
                   </div>

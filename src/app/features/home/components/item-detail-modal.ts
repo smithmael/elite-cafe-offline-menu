@@ -66,7 +66,7 @@ import {GeminiService} from '../../../core/services/gemini.service';
             <div class="flex items-center justify-between mb-10">
               <div class="flex items-center gap-4">
                 <span class="px-5 py-2 rounded-full bg-cafe-gold/10 text-cafe-gold text-[10px] font-black uppercase tracking-[0.3em] border border-cafe-gold/5">
-                  {{ language() === 'en' ? item().category.en : item().category.am }}
+                  {{ item().category }}
                 </span>
                 <div class="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-cafe-dark/5 shadow-sm">
                   <mat-icon class="text-cafe-gold text-sm">star</mat-icon>

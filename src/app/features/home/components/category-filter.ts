@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
   template: `
     <div class="md:sticky top-20 z-40 bg-cafe-cream/90 backdrop-blur-md border-b border-cafe-dark/5">
       <div class="max-w-6xl mx-auto px-6 py-6 space-y-6">
-        <!-- Search Bar -->
+        
         <div class="relative group max-w-2xl mx-auto">
           <mat-icon class="absolute left-5 top-1/2 -translate-y-1/2 text-cafe-dark/30 group-focus-within:text-cafe-gold transition-colors">search</mat-icon>
           <input 
@@ -22,21 +22,19 @@ import {MatIconModule} from '@angular/material/icon';
           >
         </div>
 
-        <!-- Category Filter -->
         <div class="overflow-x-auto no-scrollbar flex justify-start md:justify-center gap-2 md:gap-3 pb-2 px-4 md:px-0">
           @for (cat of categories(); track cat.en) {
             <button 
               (click)="selectCategory.emit(cat.en)"
-              class="category-pill"
+              class="category-pill whitespace-nowrap px-6 py-2 rounded-full border transition-all font-medium text-xs md:text-sm tracking-wider"
               [class.bg-cafe-dark]="selectedCategory() === cat.en"
               [class.text-white]="selectedCategory() === cat.en"
-              [class.border-cafe-dark]="selectedCategory() === cat.en"
               [class.bg-white]="selectedCategory() !== cat.en"
               [class.text-cafe-dark/60]="selectedCategory() !== cat.en"
+              [class.border-cafe-dark]="selectedCategory() === cat.en"
               [class.border-cafe-dark/10]="selectedCategory() !== cat.en"
-              [class.hover:border-cafe-dark/30]="selectedCategory() !== cat.en"
             >
-              {{ language() === 'en' ? cat.en : cat.am }}
+              {{ language() === 'en' ? cat.en.toUpperCase() : cat.am }}
             </button>
           }
         </div>
@@ -54,6 +52,7 @@ export class CategoryFilter {
   searchQueryChange = output<string>();
 
   onSearch(event: Event) {
-    this.searchQueryChange.emit((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQueryChange.emit(value);
   }
 }

@@ -6,105 +6,91 @@ import { MenuItem } from '../models/menu-item.model';
   providedIn: 'root',
 })
 export class MenuService {
-  // 1. Sanity Client Configuration
   private client = createClient({
-    projectId: 'q4duhjks', // Your verified Project ID
+    projectId: 'q4duhjks', 
     dataset: 'production',
     useCdn: true,
     apiVersion: '2024-03-01',
   });
 
-  // 2. State Management (Items start empty)
   private items = signal<MenuItem[]>([]);
-  
-  // 3. UI State Signals (Keep your original logic)
-  selectedCategory = signal<string>('All');
+  selectedCategory = signal<string>('ALL');
   searchQuery = signal<string>('');
   language = signal<'en' | 'am'>('en');
 
   categories = signal<{ en: string; am: string }[]>([
-    { en: 'All', am: 'ሁሉም' },
-    { en: 'Coffee & Tea', am: 'ቡና እና ሻይ' },
-    { en: 'Pastries & Sweets', am: 'ኬኮች እና ጣፋጮች' },
-    { en: 'Breakfast & Brunch', am: 'ቁርስ እና ምሳ' },
-    { en: 'Cold Drinks', am: 'ቀዝቃዛ መጠጦች' },
-    { en: 'Specials', am: 'ልዩ ቅናሾች' }
+    { en: 'ALL', am: 'ሁሉም' },
+    { en: 'COFFEE & TEA', am: 'ቡና እና ሻይ' },
+    { en: 'PASTRIES & SWEETS', am: 'ኬኮች እና ጣፋጮች' },
+    { en: 'BREAKFAST & BRUNCH', am: 'ቁርስ እና ምሳ' },
+    { en: 'COLD DRINKS', am: 'ቀዝቃዛ መጠጦች' },
+    { en: 'SPECIALS', am: 'ልዩ ቅናሾች' }
   ]);
 
   constructor() {
     this.loadMenuItems();
   }
 
-  // 4. Fetch data from Sanity
-  async loadMenuItems() {
-    console.log('--- Sanity Fetch Started ---');
-    try {
-      const query = `*[_type == "menuItem"]{
-        "id": _id,
-        name,
-        description,
-        price,
-        category,
-        "image": image.asset->url,
-        isSpecial,
-        rating,
-        tags
-      }`;
-  
-      const data = await this.client.fetch(query);
-      console.log('Raw Data from Sanity:', data);
-  
-      if (data.length === 0) {
-        console.warn('Connected to Sanity, but the database is EMPTY. Did you Publish your items?');
-      }
-  
-      this.items.set(data);
-      console.log('Signal Updated with:', this.items());
-    } catch (err) {
-      console.error('CRITICAL CONNECTION ERROR:', err);
-    }
-  }
+// 1. Improved Normalization
+private normalize(text: any): string {
+  if (!text) return '';
+  return String(text)
+    .toUpperCase()
+    .replace(/&/g, ' AND ')      // Convert & to AND so they match
+    .replace(/[^A-Z0-9\s]/g, '') // Strip symbols
+    .replace(/\bAND\b/g, '')     // Remove the word AND entirely
+    .trim()
+    .replace(/\s+/g, ' ');       // Fix double spaces
+}
 
-  // 5. Computed Signals (Original logic, now working with live data)
+// 2. Updated Query to handle multiple data formats
+async loadMenuItems() {
+  try {
+    const query = `*[_type == "menuItem"]{
+      "id": _id,
+      name,
+      description,
+      price,
+      "category": coalesce(category.en, category, ""), 
+      "image": image.asset->url,
+      isSpecial,
+      rating,
+      tags
+    }`;
+    const data = await this.client.fetch(query);
+    this.items.set(data);
+    console.log('Sanity Data Loaded:', data);
+  } catch (err) {
+    console.error('Fetch Error:', err);
+  }
+}
+
+  // FIXED: Re-added missing properties required by components
   specialItems = computed(() => this.items().filter(item => item.isSpecial));
 
   filteredItems = computed(() => {
     const items = this.items();
-    const category = this.selectedCategory();
+    const selection = this.normalize(this.selectedCategory());
     const query = this.searchQuery().toLowerCase().trim();
     const lang = this.language();
 
     return items.filter(item => {
-      let matchesCategory = false;
-      if (category === 'All') {
-        matchesCategory = true;
-      } else if (category === 'Specials') {
-        matchesCategory = !!item.isSpecial;
-      } else {
-        // Match against the English category name string
-        matchesCategory = item.category.en === category;
-      }
+      if (selection === 'ALL') return true;
+      if (selection === 'SPECIALS') return !!item.isSpecial;
+      const itemCat = this.normalize(item.category);
+      if (itemCat !== selection) return false;
 
-      if (!matchesCategory) return false;
       if (!query) return true;
-
-      const searchFields = [
-        item.name[lang],
-        item.description[lang],
-        item.name.en,
-        item.description.en
-      ];
-
+      const searchFields = [item.name?.[lang], item.description?.[lang], item.name?.en, item.description?.en];
       return searchFields.some(field => field?.toLowerCase().includes(query));
     });
   });
 
-  // 6. Helper Methods
+  // FIXED: Re-added missing helper methods
   getItemById(id: string) {
     return this.items().find(item => item.id === id);
   }
 
-  // Note: Rating update logic would typically need a Sanity Mutation to persist
   updateRating(itemId: string, rating: number) {
     this.items.update(items => items.map(item => 
       item.id === itemId ? { ...item, rating: rating } : item
