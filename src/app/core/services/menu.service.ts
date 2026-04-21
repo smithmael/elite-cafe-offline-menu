@@ -45,6 +45,9 @@ private normalize(text: any): string {
 
 // 2. Updated Query to handle multiple data formats
 async loadMenuItems() {
+  // Check if we are in the browser to avoid "localStorage is not defined" error
+  const isBrowser = typeof window !== 'undefined';
+
   try {
     const query = `*[_type == "menuItem"]{
       "id": _id,
@@ -58,33 +61,56 @@ async loadMenuItems() {
       tags
     }`;
     const data = await this.client.fetch(query);
+    
     this.items.set(data);
-    console.log('Sanity Data Loaded:', data);
+
+    // Only save to cache if we are in the browser
+    if (isBrowser) {
+      localStorage.setItem('elite_menu_cache', JSON.stringify(data));
+      console.log('✅ Online: Data cached');
+    }
   } catch (err) {
-    console.error('Fetch Error:', err);
+    console.warn('⚠️ Connection failed. Checking for offline cache...');
+    
+    if (isBrowser) {
+      const cachedData = localStorage.getItem('elite_menu_cache');
+      if (cachedData) {
+        this.items.set(JSON.parse(cachedData));
+        console.log('📱 Offline: Loaded from LocalStorage');
+      }
+    } else {
+      console.error('❌ Fetch failed and no browser context available.');
+    }
   }
 }
 
   // FIXED: Re-added missing properties required by components
   specialItems = computed(() => this.items().filter(item => item.isSpecial));
 
-  filteredItems = computed(() => {
-    const items = this.items();
-    const selection = this.normalize(this.selectedCategory());
-    const query = this.searchQuery().toLowerCase().trim();
-    const lang = this.language();
+  // src/app/core/services/menu.service.ts
 
-    return items.filter(item => {
-      if (selection === 'ALL') return true;
-      if (selection === 'SPECIALS') return !!item.isSpecial;
-      const itemCat = this.normalize(item.category);
-      if (itemCat !== selection) return false;
+filteredItems = computed(() => {
+  const allItems = this.items();
+  const activeCategory = this.selectedCategory(); // e.g., 'ALL' or 'COLD DRINKS'
+  const searchTerm = this.searchQuery().toLowerCase().trim();
 
-      if (!query) return true;
-      const searchFields = [item.name?.[lang], item.description?.[lang], item.name?.en, item.description?.en];
-      return searchFields.some(field => field?.toLowerCase().includes(query));
-    });
+  return allItems.filter(item => {
+    // 1. Category Logic
+    const matchesCategory = 
+      activeCategory === 'ALL' || 
+      this.normalize(item.category) === this.normalize(activeCategory);
+
+    // 2. Search Logic
+    const matchesSearch = 
+      searchTerm === '' || 
+      item.name.en?.toLowerCase().includes(searchTerm) || 
+      item.name.am?.toLowerCase().includes(searchTerm) ||
+      item.description.en?.toLowerCase().includes(searchTerm);
+
+    // BOTH must be true
+    return matchesCategory && matchesSearch;
   });
+});
 
   // FIXED: Re-added missing helper methods
   getItemById(id: string) {

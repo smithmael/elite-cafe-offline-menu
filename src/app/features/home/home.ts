@@ -94,9 +94,14 @@ export class Home {
     });
   }
 
+  // --- NEW: Reset Filters Logic ---
+  clearAllFilters() {
+    this.menuService.selectedCategory.set('ALL');
+    this.menuService.setSearchQuery('');
+  }
+
   rateItem(item: MenuItem, rating: number) {
     this.menuService.updateRating(item.id, rating);
-    // The MenuCard already shows a "Thank you" message, but we can also show a snackbar for global feedback
     this.snackBar.open(
       this.language() === 'en' 
         ? `You rated ${item.name.en} ${rating} stars!` 
@@ -131,7 +136,9 @@ export class Home {
   }
 
   scrollToMenu() {
-    this.menuGrid()?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
+    // Try both ViewChild and direct ID lookup for reliability
+    const element = this.menuGrid()?.nativeElement || document.getElementById('menuGrid');
+    element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   scrollToSelection() {
